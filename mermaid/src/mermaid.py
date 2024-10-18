@@ -7,17 +7,9 @@ from datetime import datetime
 # 시스템 이름 패턴과 클래스 매핑
 # 기본값으로 "central" 클래스를 사용하므로 별도로 명시하지 않음
 class_mappings = {
-    "security": [
-        "Privacy", "Log system", "DB Access Control"
-    ],
-    "local-rectangle": [
-        "MINI Online", "Helpdesk Ticketing", "Data Warehouse", "Motorrad Online",
-        "BMW Vantage", "CSM KR", "E-tax tool", "BMW Online", "Intranet",
-        "Cloud Shared Service", "RDC Operation System", "Local Cloud Data Hub KR"
-    ],
-    "local-circle": [
-        "My DMS", "Vehicle Tracing System"
-    ],
+    "security": [""],
+    "local-rectangle": [""],
+    "local-circle": [""],
 }
 
 # mermaid_code 시작 - 각 도형 class 별 모양 정의
@@ -36,8 +28,7 @@ classDef central fill:#6F6F6F,stroke:#333,stroke-width:2px,color:#ffffff;\n \
 classDef highlight stroke:red,stroke-width:6px,color:#ffffff;\n'
 
 # Load the workbook and select the active sheet
-workbook = openpyxl.load_workbook('./excel/IT_Product___Sub_Product_SWP_3048__Integration_Mar.xlsx')
-# workbook = openpyxl.load_workbook('IT_Product___Sub_Product_SWP_3048__Integration_Mar.xlsx')
+workbook = openpyxl.load_workbook('')
 sheet = workbook.active
 
 # Initialize a dictionary to store the Information Flow data
