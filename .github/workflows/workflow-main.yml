@@ -28,10 +28,10 @@ jobs:
           aws-region: ap-northeast-2
           role-to-assume: 
 
-      - name: Download the latest ConnectIT IF file from S3 bucket
+      - name: Download the latest IF file from S3 bucket
         working-directory: mermaid/excel
         run: |
-          aws s3 cp s3://$S3_BUCKET_NAME/import/.xlsx
+          aws s3 cp s3://$S3_BUCKET_NAME/import/.xlsx 
 
       - name : execute python script
         working-directory: mermaid/

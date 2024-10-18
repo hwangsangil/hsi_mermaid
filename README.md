@@ -1,13 +1,7 @@
 # 🚀 Overview
-- **Automated IT Architecture** based on Information Flow from ConnectIT
-- This project is designed to automate the deployment of Information Flow diagrams from ConnectIT using GitHub Actions.
+- **Automated IT Architecture** 
+- This project is designed to automate the deployment of Information Flow diagrams using GitHub Actions.
 - [Mermaid](https://mermaid.js.org/) language used for this project as **Diagram as a Code**
-
-## 🌐 Service Links
-> [!CAUTION]
-> Links are only available for NSC Korea Web Proxy due to security risk.
-- [IT Information Flow Architecture] - Production environment
-- [IT Information Flow Architecture - DEV] - Development environment
 
 ## 📋 Requirements
 - Understanding of Mermaid language : [Tutorials](https://mermaid.js.org/ecosystem/tutorials.html)
@@ -29,9 +23,6 @@
     ```sh
     pip install -r mermaid/requirements.txt
     ```
-
-1. Ensure the `.xlsx` file taking [in-place] which exported from ConnectIT
-    [How-To extract Information Flow](mermaid/excel/HOWTODO.md)
 
 1. Run the main script:
     ```sh
