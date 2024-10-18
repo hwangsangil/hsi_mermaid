@@ -1,0 +1,7 @@
+# to prevent uploading EXCEL file directly
+*.xls
+*.xlsx
+
+# indivisual development folder
+sanggeun/
+sangil/

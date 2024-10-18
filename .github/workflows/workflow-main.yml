@@ -1,0 +1,57 @@
+name: main - Deploy
+
+on:
+  push:
+    branches :
+      - main
+
+permissions:
+      id-token: write
+      contents: read    # This is required for actions/checkout
+
+env:
+  AWS_REGION: ap-northeast-2
+  S3_BUCKET_NAME: shared-cloudfront-s3
+
+jobs:
+  Upload-S3:
+    runs-on: ${{ vars.RUNNER_LABEL }}
+    environment: ${{ github.ref_name }}
+
+    steps:
+      - name: Git clone the repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: ap-northeast-2
+          role-to-assume: 
+
+      - name: Download the latest ConnectIT IF file from S3 bucket
+        working-directory: mermaid/excel
+        run: |
+          aws s3 cp s3://$S3_BUCKET_NAME/import/.xlsx
+
+      - name : execute python script
+        working-directory: mermaid/
+        run: |
+          pip install -r requirements.txt
+          python src/mermaid.py
+
+      - name: Get current date and time
+        id: datetime
+        run: |
+          echo "YEAR=$(date +"%Y")" >> $GITHUB_OUTPUT
+          echo "MONTH=$(date +"%m")" >> $GITHUB_OUTPUT
+          echo "DAY=$(date +"%d")" >> $GITHUB_OUTPUT
+          echo "HOUR=$(date +"%H")" >> $GITHUB_OUTPUT
+          echo "MINUTE=$(date +"%M")" >> $GITHUB_OUTPUT
+
+      - name: upload new diagram
+        working-directory: mermaid/
+        id: s3upload
+        run: |
+          current_time=$(date +"%H.%S")
+          aws s3 mv s3://$S3_BUCKET_NAME/ s3://$S3_BUCKET_NAME/data/${{ steps.datetime.outputs.YEAR }}/${{ steps.datetime.outputs.MONTH }}/${{ steps.datetime.outputs.DAY }}/ --exclude "*/*" --recursive
+          aws s3 cp html/ s3://$S3_BUCKET_NAME/ --recursive

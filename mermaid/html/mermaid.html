@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Information Flow Architecture</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        .mermaid {
+        display: block;
+        width: 90%;
+        max-width: 1800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 5px;
+        }
+
+        /* Reset some default styles */
+        * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        }
+
+        /* Menu bar styles */
+        .menu-bar {
+        background-color: #0166B1;
+        display: flex;
+        justify-content: center;
+        padding: 10px 0;
+        font-size: 18px;
+        color: #fff;
+        }
+
+        .menu-bar ul {
+        list-style-type: none;
+        display: flex;
+        }
+
+        .menu-bar li {
+        margin: 0 20px;
+        }
+
+        .menu-bar a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 13px;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        }
+
+        .menu-bar a:hover {
+        background-color: #035391;
+        font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="menu-bar">
+    <ul>
+        <li><a href="./mermaid.html" style="border: 1px solid white">ConnectIT</a></li>
+        <li><a href="./pretty.html">Pretty</a></li>
+        <li><a href="./simple.html">Simple</a></li>
+    </ul>
+</div>
+<div class="mermaid">
+<!-- 여기에 자동으로 추가됨 -->
+</div>
+
+<script>
+    mermaid.initialize({startOnLoad:true});
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            const nodes = document.querySelectorAll('.mermaid svg g');
+            nodes.forEach(node => {
+                var id = node.getAttribute('id'); // e.g., "flowchart-nodeId-1"
+                if (id) {
+                    var parts = id.split('-'); // Split by '-'
+                    var nodeId = parts[1]; // Get the middle part, e.g., "nodeId"
+                    node.setAttribute('data-node-id', nodeId);
+                    console.log('Node ID set:', nodeId);
+
+                    node.addEventListener('mouseover', function() {
+                        console.log('Mouse over:', nodeId);
+                        highlightConnection(nodeId);
+                    });
+
+                    node.addEventListener('mouseout', function() {
+                        resetHighlights();
+                    });
+                } else {
+                    console.log('No ID found for node:', node);
+                }
+            });
+        }, 1000);
+    });
+    
+    function highlightConnection(dataId) {
+        const relatedObjectNames = [];
+        const paths = document.querySelectorAll('path');
+        paths.forEach(path => {
+            const pathId = path.getAttribute('id');
+            if (pathId) {
+                const match = pathId.match(/L_(.+)_\d+$/);
+                if (match && match[1]) {
+                    const objectNames = match[1].split('_');
+                    if (objectNames.includes(dataId)) {
+                        path.style.stroke = 'red';
+                        path.style.strokeWidth = '4px';
+                        path.style.strokeDasharray = '3';
+                        relatedObjectNames.push(...objectNames);
+                    }
+                }
+            }
+        });
+        console.log('Related object names:', relatedObjectNames);
+        // classDef highlight stroke:red,stroke-width:20px,color:#ffffff;
+        // 관련된 노드들의 class를 변경
+        const rootNodes = document.querySelectorAll('.mermaid svg g.nodes g[id]');
+        rootNodes.forEach(rootNode => {
+            var id = rootNode.getAttribute('id');
+            var parts = id.split('-'); // Split by '-'
+            var nodeId = parts[1]; // Get the middle part, e.g., "nodeId"            
+            if (relatedObjectNames.includes(nodeId)) {
+                rootNode.classList.add('highlight');
+                const circle = rootNode.querySelector('circle');
+                if (circle) {
+                    let style = circle.getAttribute('style') || '';
+                    style = style.replace(/!important/g, '');
+                    circle.setAttribute('style', style);
+                    const currentR = parseFloat(circle.getAttribute('r') || 0);
+                    const increasedR = currentR * 1.05; // r값을 10% 증가
+                    circle.setAttribute('data-original-r', currentR.toString()); // 원래 r값 저장
+                    circle.setAttribute('r', increasedR.toString());
+                }
+                const rect = rootNode.querySelector('rect');
+                if (rect) {
+                    let style = rect.getAttribute('style') || '';
+                    style = style.replace(/!important/g, '');
+                    rect.setAttribute('style', style);
+                    const currentWidth = parseFloat(rect.getAttribute('width') || 0);
+                    const currentHeight = parseFloat(rect.getAttribute('height') || 0);
+                    const increasedWidth = currentWidth * 1.1; // rect의 width를 10% 증가
+                    const increasedHeight = currentHeight * 1.05; // rect의 height를 10% 증가
+                    rect.setAttribute('data-original-width', currentWidth.toString()); // 원래 width 저장
+                    rect.setAttribute('data-original-height', currentHeight.toString()); // 원래 height 저장
+                    rect.setAttribute('width', increasedWidth.toString());
+                    rect.setAttribute('height', increasedHeight.toString());
+                }
+                const foreignObject = rootNode.querySelector('foreignObject');
+                if (foreignObject) {
+                    let style = foreignObject.getAttribute('style') || '';
+                    style = style.replace(/!important/g, '');
+                    foreignObject.setAttribute('style', style);
+                    const currentWidth = parseFloat(foreignObject.getAttribute('width') || 0);
+                    const currentHeight = parseFloat(foreignObject.getAttribute('height') || 0);
+                    const increasedWidth = currentWidth * 1.1; // foreignObject의 width를 10% 증가
+                    const increasedHeight = currentHeight * 1.05; // foreignObject의 height를 10% 증가
+                    foreignObject.setAttribute('data-original-width', currentWidth.toString()); // 원래 width 저장
+                    foreignObject.setAttribute('data-original-height', currentHeight.toString()); // 원래 height 저장
+                    foreignObject.setAttribute('width', increasedWidth.toString());
+                    foreignObject.setAttribute('height', increasedHeight.toString());
+                }
+                const div = rootNode.querySelector('div'); // Assuming there's a div to style
+                if (div) {
+                    div.style.fontWeight = 'bold';
+                    div.style.fontSize = '100'; // Example size, adjust as needed
+                }    
+            } else {
+                rootNode.classList.remove('highlight');
+            }
+        });
+    }
+
+    function resetHighlights() {
+        const paths = document.querySelectorAll('path');
+        paths.forEach(path => {
+            path.style.stroke = '';
+            path.style.strokeWidth = '';
+            path.style.strokeDasharray = '';
+        });
+
+        // 모든 노드의 'highlighted' class 제거 및 기존 class 복구
+        const rootNodes = document.querySelectorAll('.mermaid svg g.nodes g[id]');
+        rootNodes.forEach(rootNode => {
+            rootNode.classList.remove('highlight');
+            const circle = rootNode.querySelector('circle');
+            if (circle) {
+                const originalR = circle.getAttribute('data-original-r'); // 원래 r값을 가져옴
+                if (originalR) {
+                    circle.setAttribute('r', originalR);
+                }
+            }
+            const rect = rootNode.querySelector('rect');
+            if (rect) {
+                const originalWidth = rect.getAttribute('data-original-width'); // 원래 width를 가져옴
+                const originalHeight = rect.getAttribute('data-original-height'); // 원래 height를 가져옴
+                if (originalWidth && originalHeight) {
+                    rect.setAttribute('width', originalWidth);
+                    rect.setAttribute('height', originalHeight);
+                }
+            }
+            const foreignObject = rootNode.querySelector('foreignObject');
+            if (foreignObject) {
+                const originalWidth = foreignObject.getAttribute('data-original-width'); // 원래 width를 가져옴
+                const originalHeight = foreignObject.getAttribute('data-original-height'); // 원래 height를 가져옴
+                if (originalWidth && originalHeight) {
+                    foreignObject.setAttribute('width', originalWidth);
+                    foreignObject.setAttribute('height', originalHeight);
+                }
+            }
+            const div = rootNode.querySelector('div');
+            if (div) {
+                    div.style.fontWeight = '';
+                    div.style.fontSize = '';
+                }    
+        });
+    }
+</script>
+
+</body>
+</html>
